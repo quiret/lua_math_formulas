@@ -1,0 +1,13 @@
+<meta>
+    <info author="The_GTA" description="Math formulation renderer for MTA San Andreas written in Lua" type="util" />
+    <script src="shared.lua" type="shared" />
+    <script src="dependency_graph.lua" type="shared" />
+    <script src="dependency_graph_tests.lua" type="shared" />
+    <script src="tree_graph.lua" type="shared" />
+    <script src="boundingbox.lua" type="shared" />
+    <script src="formula_layout.lua" type="shared" />
+    <script src="formula_layout_tests.lua" type="shared" />
+    <script src="math_formulation.lua" type="shared" />
+    <script src="math_formulation_tests.lua" type="shared" />
+    <script src="math_formulation_draw.lua" type="client" />
+</meta>
