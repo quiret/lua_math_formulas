@@ -5,6 +5,8 @@ Math formulation renderer for MTA San Andreas written in Lua
 
 Put it into your MTA Server resources folder and start this resource.
 
+MTA forums topic: https://forum.mtasa.com/topic/132054-toolkit-math-formula-rendering/
+
 ## Available test commands
 
 The following commands draw a mathematical formula at pixel coord (300, 300).
