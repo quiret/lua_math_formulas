@@ -638,9 +638,14 @@ local function createDrawingFormula(formula)
                     
                     parent_node_appender.append_new_node(bracketeer);
                     
-                    multobjformula.setParentToLayoutNode(bracketeer);
-                    multobjformula.getLayoutNode().clearChildrenCallbacks();
-                    multobjformula.getLayoutNode().addChildrenCallback(
+                    local bracket_alignment_node = formula_layout_man.createLayoutNode(false, false, false, false, 1, bracketeer, nil, nil, nil);
+                    
+                    local boxing_node = formula_layout_man.createLayoutNode(false, false, false, false, 1, bracket_alignment_node, nil, nil, nil);
+                    
+                    add_boxing_to_node(boxing_node);
+                    
+                    multobjformula.setParentToLayoutNode(boxing_node);
+                    bracket_alignment_node.addChildrenCallback(
                         function(min_x, max_x, min_y, max_y)
                             local xoff, yoff, full_w, full_h = calculateBracketShape(max_x - min_x, max_y - min_y);
                             
@@ -671,9 +676,14 @@ local function createDrawingFormula(formula)
                     
                     parent_node_appender.append_new_node(rootshaper);
                     
-                    multobjformula.setParentToLayoutNode(rootshaper);
-                    multobjformula.getLayoutNode().clearChildrenCallbacks();
-                    multobjformula.getLayoutNode().addChildrenCallback(
+                    local rootshaper_alignment_node = formula_layout_man.createLayoutNode(false, false, false, false, 1, rootshaper, nil, nil, nil);
+                    
+                    local boxing_node = formula_layout_man.createLayoutNode(false, false, false, false, 1, rootshaper_alignment_node, nil, nil, nil);
+                    
+                    add_boxing_to_node(boxing_node);
+                    
+                    multobjformula.setParentToLayoutNode(boxing_node);
+                    rootshaper_alignment_node.addChildrenCallback(
                         function(min_x, max_x, min_y, max_y)
                             local xoff, yoff, full_w, full_h = calculateRootShape(max_x - min_x, max_y - min_y, 2);
                             
@@ -730,7 +740,7 @@ local function createDrawingFormula(formula)
                             function(minx, maxx, miny, maxy)
                                 local exp_offX = ( maxx + exp_distancer );
                                 
-                                return exp_offX, 0, false, false, exp_to_main_scale;
+                                return exp_offX, miny, false, false, exp_to_main_scale;
                             end
                         );
                     end
@@ -966,6 +976,20 @@ addCommandHandler("dt", function(_, ftype)
             end
         elseif (ftype == "realaddcomplex2") then
             local num = math_pow(math_add(createRealNumber(math.pi), createFraction(1, 2)), 2);
+            local todraw = createDrawingFormula(num);
+            
+            drawing_func = function()
+                todraw.draw(300, 300, 1);
+            end
+        elseif (ftype == "realaddcomplex3") then
+            local num = math_pow(math_add(createRealNumber(math.pi), createFraction(1, 3)), createRealNumber(math.exp(1)));
+            local todraw = createDrawingFormula(num);
+            
+            drawing_func = function()
+                todraw.draw(300, 300, 1);
+            end
+        elseif (ftype == "realaddcomplex4") then
+            local num = math_pow(math_add(createRealNumber(math.pi), createFraction(1, 2)), createFraction(1, 2));
             local todraw = createDrawingFormula(num);
             
             drawing_func = function()
