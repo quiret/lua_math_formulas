@@ -1,7 +1,11 @@
 # lua_math_formulas
 Math formulation renderer for MTA San Andreas written in Lua
 
+![image](https://user-images.githubusercontent.com/7682485/128644299-4b67153a-c6f1-45fb-9b18-63ede4c0776e.png)
+
 Put it into your MTA Server resources folder and start this resource.
+
+MTA forums topic: https://forum.mtasa.com/topic/132054-toolkit-math-formula-rendering/
 
 ## Available test commands
 
