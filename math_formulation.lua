@@ -73,9 +73,54 @@ local function get_number_type(a)
 end
 _G.math_type = get_number_type;
 
+-- If set to true then we optimize fractions down to smallest counter/divisor aswell.
+local _optimize_fraction_smallest = true;
+
+function math_fractopt(doopt)
+    local oldsetting = _optimize_fraction_smallest;
+
+    if (doopt) then
+        _optimize_fraction_smallest = true;
+    else
+        _optimize_fraction_smallest = false;
+    end
+    
+    return oldsetting;
+end
+
 local createFraction;
 
 local function optimizedFraction(a, b)
+    if (_optimize_fraction_smallest) then
+        local biggest_possible_div = math.min(a, b);
+        
+        while (biggest_possible_div > 1) do
+            local remainder_a = ( a % biggest_possible_div );
+            local remainder_b = ( b % biggest_possible_div );
+            
+            if (remainder_a == 0) and (remainder_b == 0) then
+                a = a / biggest_possible_div;
+                b = b / biggest_possible_div;
+                
+                if (biggest_possible_div > a) then
+                    biggest_possible_div = a;
+                end
+                
+                if (biggest_possible_div > b) then
+                    biggest_possible_div = b;
+                end
+            else
+                biggest_possible_div = biggest_possible_div - 1;
+            end
+        end
+        
+        if (b == 1) then
+            return a;
+        else
+            return createFraction(a, b);
+        end
+    end
+
     local remainder = ( a % b );
     
     if (remainder == 0) then
