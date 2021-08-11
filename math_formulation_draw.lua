@@ -436,7 +436,7 @@ local function createDrawingFormula(formula)
             local sep_w, sep_h = separator_node.getSize();
             local sep_scale = separator_node.getAbsoluteScale();
             
-            sep_y = sep_y + div_separator_height * sep_scale * scale / 2;
+            sep_y = sep_y * scale + div_separator_height * sep_scale * scale / 2;
             
             dxDrawLine(
                 xoff + sep_x * scale, yoff + sep_y,
@@ -471,8 +471,8 @@ local function createDrawingFormula(formula)
             local abs_x, abs_y = layout_node.getAbsolutePos();
             local abs_scale = layout_node.getAbsoluteScale();
         
-            xoff = xoff + abs_x;
-            yoff = yoff + abs_y;
+            xoff = xoff + abs_x * scale;
+            yoff = yoff + abs_y * scale;
             scale = scale * abs_scale;
         
             _dxDrawTextFixed(
@@ -758,7 +758,9 @@ local function createDrawingFormula(formula)
                 end
                 
                 local plus_width = dxGetTextWidth(plus_text, formula_baseScale, formula_font);
-                local plusnode = formula_layout_man.createLayoutNode(false, false, plus_width + plus_spacing * 2, formula_fontHeight, 1, layout_node, nil, nil, valign_layout_callback);
+                local plusnode = formula_layout_man.createLayoutNode(false, false, plus_width, formula_fontHeight, 1, layout_node, nil, nil, valign_layout_callback);
+                
+                plusnode.setBorder(plus_spacing, plus_spacing, plus_spacing, plus_spacing);
                 
                 main_appender.append_new_node(plusnode);
                 
@@ -766,10 +768,10 @@ local function createDrawingFormula(formula)
                     local abs_x, abs_y = plusnode.getAbsolutePos();
                     local abs_scale = plusnode.getAbsoluteScale() * scale;
                     
-                    abs_x = abs_x + xoff;
-                    abs_y = abs_y + yoff;
+                    abs_x = abs_x * scale + xoff;
+                    abs_y = abs_y * scale + yoff;
                     
-                    _dxDrawTextFixed(plus_text, abs_x + plus_spacing * abs_scale, abs_y, 0, 0, formula_fontColor, formula_baseScale * abs_scale, formula_font, "alphanumeric");
+                    _dxDrawTextFixed(plus_text, abs_x, abs_y, 0, 0, formula_fontColor, formula_baseScale * abs_scale, formula_font, "alphanumeric");
                 end
                 
                 main_appender.setLastNode(plusnode);
