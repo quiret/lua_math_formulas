@@ -92,27 +92,39 @@ local createFraction;
 
 local function optimizedFraction(a, b)
     if (_optimize_fraction_smallest) then
-        local biggest_possible_div = math.min(a, b);
+        local is_neg = (a*b) < 0;
+    
+        local abs_a = math.abs(a);
+        local abs_b = math.abs(b);
+        local biggest_possible_div = math.min(abs_a, abs_b);
         
         while (biggest_possible_div > 1) do
-            local remainder_a = ( a % biggest_possible_div );
-            local remainder_b = ( b % biggest_possible_div );
+            local remainder_a = ( abs_a % biggest_possible_div );
+            local remainder_b = ( abs_b % biggest_possible_div );
             
             if (remainder_a == 0) and (remainder_b == 0) then
-                a = a / biggest_possible_div;
-                b = b / biggest_possible_div;
+                abs_a = abs_a / biggest_possible_div;
+                abs_b = abs_b / biggest_possible_div;
                 
-                if (biggest_possible_div > a) then
-                    biggest_possible_div = a;
+                if (biggest_possible_div > abs_a) then
+                    biggest_possible_div = abs_a;
                 end
                 
-                if (biggest_possible_div > b) then
-                    biggest_possible_div = b;
+                if (biggest_possible_div > abs_b) then
+                    biggest_possible_div = abs_b;
                 end
             else
                 biggest_possible_div = biggest_possible_div - 1;
             end
         end
+        
+        if (is_neg) then
+            a = -abs_a;
+        else
+            a = abs_a;
+        end
+        
+        b = abs_b;
         
         if (b == 1) then
             return a;
