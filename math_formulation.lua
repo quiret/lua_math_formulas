@@ -499,11 +499,11 @@ local function add_numbers(a, b, is_sub)
         -- The real number consists of a sum of possible symbolic numbers, like pi or e.
         -- There is at max one fraction or disfract number.
         -- Due to their internal complexity, real numbers are mutable (and clonable).
-        local new_a = a.clone();
+        local new_real = real.clone();
         
         if (othertype == "real") then
-            local a_summands = new_a.getSummands();
-            local b_summands = b.getSummands();
+            local a_summands = new_real.getSummands();
+            local b_summands = other.getSummands();
             
             for m,n in ipairs(b_summands) do
                 local found = findCompatibleSummandToMultiplicants(a_summands, n.multiplicants);
@@ -524,7 +524,7 @@ local function add_numbers(a, b, is_sub)
                 return 0;
             end
         elseif (othertype == "fraction") or (othertype == "disfract") then
-            local a_summands = new_a.getSummands();
+            local a_summands = new_real.getSummands();
             local has_modified_existing = false;
             
             for m,n in ipairs(a_summands) do
@@ -550,7 +550,7 @@ local function add_numbers(a, b, is_sub)
                 table.insert(a_summands, summ);
             end
         else
-            local a_summands = new_a.getSummands();
+            local a_summands = new_real.getSummands();
             local has_adjusted_numeric = false;
             
             for m,n in ipairs(a_summands) do
@@ -580,7 +580,7 @@ local function add_numbers(a, b, is_sub)
             end
         end
         
-        return new_a;
+        return new_real;
     end
     
     return false;
