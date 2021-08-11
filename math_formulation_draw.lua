@@ -555,27 +555,8 @@ local function createDrawingFormula(formula)
         local plus_spacing = 4;
         
         for m,n in ipairs(summands) do
-            if (m >= 2) then
-                -- Add a plus symbol.
-                local plus_text = "+";
-                local plus_width = dxGetTextWidth(plus_text, formula_baseScale, formula_font);
-                local plusnode = formula_layout_man.createLayoutNode(false, false, plus_width + plus_spacing * 2, formula_fontHeight, 1, layout_node, nil, nil, valign_layout_callback);
-                
-                main_appender.append_new_node(plusnode);
-                
-                function plusnode.draw(xoff, yoff, scale)
-                    local abs_x, abs_y = plusnode.getAbsolutePos();
-                    local abs_scale = plusnode.getAbsoluteScale() * scale;
-                    
-                    abs_x = abs_x + xoff;
-                    abs_y = abs_y + yoff;
-                    
-                    _dxDrawTextFixed(plus_text, abs_x + plus_spacing * abs_scale, abs_y, 0, 0, formula_fontColor, formula_baseScale * abs_scale, formula_font, "alphanumeric");
-                end
-                
-                main_appender.setLastNode(plusnode);
-            end
-            
+            local is_negative = false;
+    
             local node_above_divisor = false;
             local node_below_divisor = false;
             
@@ -585,7 +566,8 @@ local function createDrawingFormula(formula)
             local function process_multiplicant(multobj, exp)
                 local parent_node = nil;
                 local parent_node_appender = nil;
-                local is_exp_negative = math_lt(exp, 0);
+                
+                local is_exp_negative = (math_lt(exp, 0) == true);
                 
                 if (is_exp_negative) then
                     if not (node_below_divisor) then
@@ -605,6 +587,11 @@ local function createDrawingFormula(formula)
                 
                     parent_node = node_above_divisor;
                     parent_node_appender = node_above_divisor_appender;
+                end
+            
+                if (exp == 1) and (math_lt(multobj, 0) == true) then
+                    is_negative = not is_negative;
+                    multobj = math_mul(multobj, -1);
                 end
             
                 local multobjtype = math_type(multobj);
@@ -745,7 +732,7 @@ local function createDrawingFormula(formula)
                         );
                     end
                     
-                    if (required_encapsulation == "bracket") then
+                    if not (required_encapsulation) or (required_encapsulation == "bracket") then
                         parent_node_appender.setLastObject(expobjformula);
                     end
                 end
@@ -759,7 +746,35 @@ local function createDrawingFormula(formula)
             for j,k in ipairs(n.multiplicants) do
                 process_multiplicant(k.obj, k.exp);
             end
-            
+
+            if (is_negative) or (m >= 2) then
+                -- Add a plus symbol.
+                local plus_text;
+                
+                if (is_negative) then
+                    plus_text = "-";
+                else
+                    plus_text = "+";
+                end
+                
+                local plus_width = dxGetTextWidth(plus_text, formula_baseScale, formula_font);
+                local plusnode = formula_layout_man.createLayoutNode(false, false, plus_width + plus_spacing * 2, formula_fontHeight, 1, layout_node, nil, nil, valign_layout_callback);
+                
+                main_appender.append_new_node(plusnode);
+                
+                function plusnode.draw(xoff, yoff, scale)
+                    local abs_x, abs_y = plusnode.getAbsolutePos();
+                    local abs_scale = plusnode.getAbsoluteScale() * scale;
+                    
+                    abs_x = abs_x + xoff;
+                    abs_y = abs_y + yoff;
+                    
+                    _dxDrawTextFixed(plus_text, abs_x + plus_spacing * abs_scale, abs_y, 0, 0, formula_fontColor, formula_baseScale * abs_scale, formula_font, "alphanumeric");
+                end
+                
+                main_appender.setLastNode(plusnode);
+            end
+                    
             -- Need to arrange the things.
             local new_node;
             
@@ -840,6 +855,7 @@ local function createDrawingFormula(formula)
     
     return obj;
 end
+_G.createDrawingFormula = createDrawingFormula;
 
 -- Tests.
 addCommandHandler("dt", function(_, ftype)
