@@ -91,6 +91,10 @@ end
 local createFraction;
 
 local function optimizedFraction(a, b)
+    if (a == 0) then
+        return 0;
+    end
+
     if (_optimize_fraction_smallest) then
         local is_neg = (a*b) < 0;
     

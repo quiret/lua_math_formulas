@@ -821,63 +821,67 @@ function createFormulaLayoutManager(hint_name, MATH_LOCAL_DEBUG)
                     
                     local child_local_minx, child_local_maxx, child_local_miny, child_local_maxy = calc_child_bbox();
                     
-                    local curobj_border_left = ( child_local_minx - curobj_border_minx );
-                    local curobj_border_right = ( curobj_border_maxx - child_local_maxx );
-                    local curobj_border_top = ( child_local_miny - curobj_border_miny );
-                    local curobj_border_bottom = ( curobj_border_maxy - child_local_maxy );
-                
-                    local depCloud = n.bound_cloud;
-                    local borderCloud = n.cloud;
+                    if (child_local_minx) and (curobj_border_minx) then
+                        local curobj_border_left = ( child_local_minx - curobj_border_minx );
+                        local curobj_border_right = ( curobj_border_maxx - child_local_maxx );
+                        local curobj_border_top = ( child_local_miny - curobj_border_miny );
+                        local curobj_border_bottom = ( curobj_border_maxy - child_local_maxy );
                     
-                    local border_minx, border_maxx, border_miny, border_maxy = borderCloud.getMeta().bbox.getValues();
-                    local dep_minx, dep_maxx, dep_miny, dep_maxy = depCloud.getMeta().bbox.getValues();
-                    
-                    local dep_border_left = ( dep_minx - border_minx );
-                    local dep_border_top = ( dep_miny - border_miny );
-                    local dep_border_right = ( border_maxx - dep_maxx );
-                    local dep_border_bottom = ( border_maxy - dep_maxy );
-                    
-                    if (dep_border_left < curobj_border_left) then
-                        dep_border_left = curobj_border_left;
-                    end
-                    
-                    if (dep_border_top < curobj_border_top) then
-                        dep_border_top = curobj_border_top;
-                    end
-                    
-                    if (dep_border_right < curobj_border_right) then
-                        dep_border_right = curobj_border_right;
-                    end
-                    
-                    if (dep_border_bottom < curobj_border_bottom) then
-                        dep_border_bottom = curobj_border_bottom;
-                    end
-                    
-                    local keepdist_minx = ( dep_minx - dep_border_left );
-                    local keepdist_maxx = ( dep_maxx + dep_border_right );
-                    local keepdist_miny = ( dep_miny - dep_border_top );
-                    local keepdist_maxy =  ( dep_maxy + dep_border_bottom );
-                    
-                    local new_local_x, new_local_y, new_local_w, new_local_h, new_local_scale = n.cb( keepdist_minx, keepdist_maxx, keepdist_miny, keepdist_maxy );
-                    
-                    if (new_local_x) then
-                        local_x = new_local_x;
-                    end
-                    
-                    if (new_local_y) then
-                        local_y = new_local_y;
-                    end
-                    
-                    if (new_local_w) then
-                        local_w = new_local_w;
-                    end
-                    
-                    if (new_local_h) then
-                        local_h = new_local_h;
-                    end
-                    
-                    if (new_local_scale) then
-                        local_scale = new_local_scale;
+                        local depCloud = n.bound_cloud;
+                        local borderCloud = n.cloud;
+                        
+                        local border_minx, border_maxx, border_miny, border_maxy = borderCloud.getMeta().bbox.getValues();
+                        local dep_minx, dep_maxx, dep_miny, dep_maxy = depCloud.getMeta().bbox.getValues();
+                        
+                        if (border_minx) and (dep_minx) then
+                            local dep_border_left = ( dep_minx - border_minx );
+                            local dep_border_top = ( dep_miny - border_miny );
+                            local dep_border_right = ( border_maxx - dep_maxx );
+                            local dep_border_bottom = ( border_maxy - dep_maxy );
+                            
+                            if (dep_border_left < curobj_border_left) then
+                                dep_border_left = curobj_border_left;
+                            end
+                            
+                            if (dep_border_top < curobj_border_top) then
+                                dep_border_top = curobj_border_top;
+                            end
+                            
+                            if (dep_border_right < curobj_border_right) then
+                                dep_border_right = curobj_border_right;
+                            end
+                            
+                            if (dep_border_bottom < curobj_border_bottom) then
+                                dep_border_bottom = curobj_border_bottom;
+                            end
+                            
+                            local keepdist_minx = ( dep_minx - dep_border_left );
+                            local keepdist_maxx = ( dep_maxx + dep_border_right );
+                            local keepdist_miny = ( dep_miny - dep_border_top );
+                            local keepdist_maxy =  ( dep_maxy + dep_border_bottom );
+                            
+                            local new_local_x, new_local_y, new_local_w, new_local_h, new_local_scale = n.cb( keepdist_minx, keepdist_maxx, keepdist_miny, keepdist_maxy );
+                            
+                            if (new_local_x) then
+                                local_x = new_local_x;
+                            end
+                            
+                            if (new_local_y) then
+                                local_y = new_local_y;
+                            end
+                            
+                            if (new_local_w) then
+                                local_w = new_local_w;
+                            end
+                            
+                            if (new_local_h) then
+                                local_h = new_local_h;
+                            end
+                            
+                            if (new_local_scale) then
+                                local_scale = new_local_scale;
+                            end
+                        end
                     end
                 end
             end

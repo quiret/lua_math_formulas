@@ -758,7 +758,7 @@ local function createDrawingFormula(formula)
                 end
                 
                 local plus_width = dxGetTextWidth(plus_text, formula_baseScale, formula_font);
-                local plusnode = formula_layout_man.createLayoutNode(false, false, plus_width, formula_fontHeight, 1, layout_node, nil, nil, valign_layout_callback);
+                local plusnode = formula_layout_man.createLayoutNode(0, 0, plus_width, formula_fontHeight, 1, layout_node, nil, nil, valign_layout_callback);
                 
                 plusnode.setBorder(plus_spacing, plus_spacing, plus_spacing, plus_spacing);
                 
